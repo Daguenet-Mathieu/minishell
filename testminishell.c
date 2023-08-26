@@ -78,6 +78,19 @@ void    ft_strcpy(char *dest, char *src)
 	dest[i] = 0;
 }
 
+void	print_history(t_list *list)
+{
+	int		i;
+
+	i = 1;
+	while (list)
+	{
+		printf("    %d  %s\n", i, list->s);
+		i++;
+		list = list->next;
+	}
+}
+
 int main(int argc, char *argv[])
 {
     char    *buffer;
@@ -106,6 +119,8 @@ int main(int argc, char *argv[])
 		// minishell(buffer);
 		add_history(buffer);
 		add_to_list(buffer, &history);
+		if (strcmp("history", buffer) == 0)
+			print_history(history);
 		if (!history)
 			break ;
     }
