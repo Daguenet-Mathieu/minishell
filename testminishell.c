@@ -114,12 +114,11 @@ int main(int argc, char *argv[])
         buffer = readline(prompt);
         if (!buffer)
             break;
-		printf("You entered: %s\n", buffer);
 		//rl_replace_line("test", 0);
 		// minishell(buffer);
 		add_history(buffer);
 		add_to_list(buffer, &history);
-		if (strcmp("history", buffer) == 0)
+		if (strcmp("history", buffer) == 0)//option n pas mal? le x deniers? passer lst size et decrementer la taille jusau'a au'elle vaille n
 			print_history(history);
 		if (!history)
 			break ;
