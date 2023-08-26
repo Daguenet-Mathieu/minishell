@@ -11,6 +11,50 @@
 # define RESET "\1\x1b[0m\2"
 # define RED "\1\033[38;5;12m\2"
 
+typedef struct s_list
+{
+	char *s;
+	struct s_list *next;
+}t_list;
+
+void	lst_clear(t_list **lst)
+{
+	t_list	*tmp;
+
+	while (*lst)
+	{
+		tmp = (*lst)->next;
+		free((*lst)->s);
+		free(*lst);
+		*lst = tmp;
+	}
+}
+
+void	add_to_list(char *s, t_list **list)
+{
+	t_list *new;
+	t_list	*lst;
+
+	new = malloc(sizeof(t_list));
+	if (!new)
+	{
+		free(s);
+		lst_clear(list);
+		return ;
+	}
+	new->next = NULL;
+	new->s = s;
+	if (!*list)
+	{
+		*list = new;
+		return ;
+	}
+	lst = *list;
+	while (lst->next)
+		lst = lst->next;
+	lst->next = new;
+}
+
 long ft_strlen(char *s)
 {
     int i;
@@ -39,7 +83,9 @@ int main(int argc, char *argv[])
     char    *buffer;
     char    prompt[100];
     int     tty;
+	t_list	*history;
 
+	history = NULL;
     tty = isatty(0);
     if (tty)
     {
@@ -59,8 +105,11 @@ int main(int argc, char *argv[])
 		//rl_replace_line("test", 0);
 		// minishell(buffer);
 		add_history(buffer);
-		free(buffer);
+		add_to_list(buffer, &history);
+		if (!history)
+			break ;
     }
+	lst_clear(&history);
 	rl_clear_history();
     if (tty)
         printf("exit\n");
