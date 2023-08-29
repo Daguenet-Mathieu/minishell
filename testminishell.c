@@ -3,13 +3,17 @@
 #include <unistd.h>
 #include <readline/readline.h>
 #include <readline/history.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+
 
 //https://gist.github.com/kylieCat/86744517063e8ec2daf8c69363720ecd
 
 ///1/2 indque a readline de ne pas compter les char dans la taille du prompt evite bug d'affichage
 # define ORANGE "\1\033[38;5;208m\2"
 # define RESET "\1\x1b[0m\2"
-# define RED "\1\033[38;5;12m\2"
+# define BLUE "\1\033[38;5;12m\2"
 
 typedef struct s_list
 {
@@ -97,18 +101,25 @@ int main(int argc, char *argv[])
     char    prompt[100];
     int     tty;
 	t_list	*history;
+	int		fd;
 
 	history = NULL;
     tty = isatty(0);
     if (tty)
     {
-        ft_strcpy(prompt, RED);
+        ft_strcpy(prompt, BLUE);
         ft_strcpy(prompt + ft_strlen(prompt), "minisheljoharymadaguen> ");
         ft_strcpy(prompt + ft_strlen(prompt), RESET);
     }
     else
-        prompt[0] = 0;
- 
+    {
+	    prompt[0] = 32;
+		prompt[1] = 0;
+	}
+
+	fd = open("cc",O_RDONLY);
+	printf("fd : %d\n", fd);
+	dup2(fd,0);
     while(1)
     {
         buffer = readline(prompt);
